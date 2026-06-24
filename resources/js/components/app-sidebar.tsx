@@ -25,18 +25,20 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { index as opdsIndex } from '@/routes/opds';
-import { index as unitsIndex } from '@/routes/units';
 import { index as periodsIndex } from '@/routes/periods';
-import { index as surveysIndex } from '@/routes/surveys';
 import { index as recommendationsIndex } from '@/routes/recommendations';
+import { index as surveysIndex } from '@/routes/surveys';
 import { index as syncIndex } from '@/routes/sync';
+import { index as unitsIndex } from '@/routes/units';
 import { index as usersIndex } from '@/routes/users';
 import type { NavItem } from '@/types';
 
 export function AppSidebar() {
     const { auth } = usePage().props as any;
     const userRoles = auth?.user?.roles || [];
-    const isSuperAdmin = userRoles.some((role: any) => role.slug === 'superadmin');
+    const isSuperAdmin = userRoles.some(
+        (role: any) => role.slug === 'superadmin',
+    );
 
     const mainNavItems: NavItem[] = [
         {

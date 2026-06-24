@@ -1,6 +1,16 @@
 import { Head, useForm } from '@inertiajs/react';
+import {
+    Plus,
+    Pencil,
+    Trash,
+    X,
+    Calendar,
+    CheckCircle2,
+    Search,
+    ChevronLeft,
+    ChevronRight,
+} from 'lucide-react';
 import { useState } from 'react';
-import { Plus, Pencil, Trash, X, Calendar, CheckCircle2, AlertCircle, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Period {
@@ -25,12 +35,17 @@ export default function PeriodsIndex({ periods, canManage }: IndexProps) {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
 
-    const filteredPeriods = periods.filter(period => {
-        const matchesSearch = period.name.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesStatus = 
-            statusFilter === 'all' ? true :
-            statusFilter === 'active' ? period.is_active :
-            !period.is_active;
+    const filteredPeriods = periods.filter((period) => {
+        const matchesSearch = period.name
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase());
+        const matchesStatus =
+            statusFilter === 'all'
+                ? true
+                : statusFilter === 'active'
+                  ? period.is_active
+                  : !period.is_active;
+
         return matchesSearch && matchesStatus;
     });
 
@@ -38,19 +53,32 @@ export default function PeriodsIndex({ periods, canManage }: IndexProps) {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredPeriods.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = filteredPeriods.slice(
+        indexOfFirstItem,
+        indexOfLastItem,
+    );
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(e.target.value);
         setCurrentPage(1);
     };
 
-    const handleStatusFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleStatusFilterChange = (
+        e: React.ChangeEvent<HTMLSelectElement>,
+    ) => {
         setStatusFilter(e.target.value);
         setCurrentPage(1);
     };
 
-    const { data, setData, post, patch, delete: destroy, processing, reset, errors } = useForm({
+    const {
+        data,
+        setData,
+        post,
+        patch,
+        delete: destroy,
+        processing,
+        reset,
+    } = useForm({
         name: '',
         start_date: '',
         end_date: '',
@@ -65,13 +93,16 @@ export default function PeriodsIndex({ periods, canManage }: IndexProps) {
                 setIsCreateOpen(false);
                 reset();
             },
-            onError: () => toast.error('Gagal menambahkan periode survei.')
+            onError: () => toast.error('Gagal menambahkan periode survei.'),
         });
     };
 
     const handleEditSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!editingPeriod) return;
+
+        if (!editingPeriod) {
+            return;
+        }
 
         patch(`/admin/periods/${editingPeriod.id}`, {
             onSuccess: () => {
@@ -79,15 +110,20 @@ export default function PeriodsIndex({ periods, canManage }: IndexProps) {
                 setEditingPeriod(null);
                 reset();
             },
-            onError: () => toast.error('Gagal memperbarui periode survei.')
+            onError: () => toast.error('Gagal memperbarui periode survei.'),
         });
     };
 
     const handleDelete = (period: Period) => {
-        if (confirm(`Apakah Anda yakin ingin menghapus periode "${period.name}"? Seluruh data survei dan hasil kalkulasi pada periode ini akan dihapus permanen.`)) {
+        if (
+            confirm(
+                `Apakah Anda yakin ingin menghapus periode "${period.name}"? Seluruh data survei dan hasil kalkulasi pada periode ini akan dihapus permanen.`,
+            )
+        ) {
             destroy(`/admin/periods/${period.id}`, {
-                onSuccess: () => toast.success('Periode survei berhasil dihapus.'),
-                onError: () => toast.error('Gagal menghapus periode survei.')
+                onSuccess: () =>
+                    toast.success('Periode survei berhasil dihapus.'),
+                onError: () => toast.error('Gagal menghapus periode survei.'),
             });
         }
     };
@@ -104,18 +140,28 @@ export default function PeriodsIndex({ periods, canManage }: IndexProps) {
 
     const formatDate = (dateStr: string) => {
         const d = new Date(dateStr);
-        return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+        return d.toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+        });
     };
 
     return (
-        <div className="p-6 space-y-6">
+        <div className="space-y-6 p-6">
             <Head title="Kelola Periode Survei - SATUKAN" />
 
             {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-gray-100 pb-5">
+            <div className="flex flex-col gap-4 border-b border-gray-100 pb-5 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Periode Survei Nasional</h1>
-                    <p className="text-sm text-gray-500">Kelola kuartal/semester penjadwalan survei dan pembatasan data IKM.</p>
+                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                        Periode Survei Nasional
+                    </h1>
+                    <p className="text-sm text-gray-500">
+                        Kelola kuartal/semester penjadwalan survei dan
+                        pembatasan data IKM.
+                    </p>
                 </div>
                 {canManage && (
                     <button
@@ -123,7 +169,7 @@ export default function PeriodsIndex({ periods, canManage }: IndexProps) {
                             reset();
                             setIsCreateOpen(true);
                         }}
-                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-[#355C7D] hover:bg-[#284964] rounded-lg shadow-sm transition-all gap-1.5"
+                        className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#355C7D] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#284964]"
                     >
                         <Plus className="h-4 w-4" />
                         Tambah Periode
@@ -132,42 +178,47 @@ export default function PeriodsIndex({ periods, canManage }: IndexProps) {
             </div>
 
             {/* Main view grid */}
-            <div className="grid lg:grid-cols-12 gap-6">
+            <div className="grid gap-6 lg:grid-cols-12">
                 {/* Info Note */}
-                <div className="lg:col-span-4 space-y-4">
-                    <div className="bg-[#355C7D]/5 p-5 rounded-xl border border-[#355C7D]/10 space-y-3">
-                        <h4 className="font-bold text-gray-800 text-sm flex items-center gap-1.5 dark:text-white">
+                <div className="space-y-4 lg:col-span-4">
+                    <div className="space-y-3 rounded-xl border border-[#355C7D]/10 bg-[#355C7D]/5 p-5">
+                        <h4 className="flex items-center gap-1.5 text-sm font-bold text-gray-800 dark:text-white">
                             <CheckCircle2 className="h-5 w-5 text-[#355C7D]" />
                             Ketentuan Periode Aktif
                         </h4>
-                        <p className="text-xs text-gray-500 leading-relaxed dark:text-neutral-400">
-                            Hanya boleh ada <strong>satu periode aktif</strong> dalam satu waktu. Ketika Anda mengaktifkan sebuah periode baru, sistem akan menonaktifkan periode aktif sebelumnya secara otomatis.
+                        <p className="text-xs leading-relaxed text-gray-500 dark:text-neutral-400">
+                            Hanya boleh ada <strong>satu periode aktif</strong>{' '}
+                            dalam satu waktu. Ketika Anda mengaktifkan sebuah
+                            periode baru, sistem akan menonaktifkan periode
+                            aktif sebelumnya secara otomatis.
                         </p>
-                        <p className="text-xs text-gray-500 leading-relaxed dark:text-neutral-400">
-                            Responden masyarakat umum hanya dapat mengisi kuesioner survei yang ditautkan ke periode aktif saat ini.
+                        <p className="text-xs leading-relaxed text-gray-500 dark:text-neutral-400">
+                            Responden masyarakat umum hanya dapat mengisi
+                            kuesioner survei yang ditautkan ke periode aktif
+                            saat ini.
                         </p>
                     </div>
                 </div>
 
                 {/* Table list */}
-                <div className="lg:col-span-8 space-y-4">
+                <div className="space-y-4 lg:col-span-8">
                     {/* Search and Filters */}
-                    <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-white dark:bg-neutral-900 p-4 rounded-xl border border-gray-100 dark:border-neutral-800 shadow-sm">
-                        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                    <div className="flex flex-col items-center justify-between gap-4 rounded-xl border border-gray-100 bg-white p-4 shadow-sm sm:flex-row dark:border-neutral-800 dark:bg-neutral-900">
+                        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
                             <div className="relative w-full sm:w-64">
-                                <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                                <Search className="absolute top-2.5 left-3 h-4 w-4 text-gray-400" />
                                 <input
                                     type="text"
                                     placeholder="Cari nama periode..."
                                     value={searchQuery}
                                     onChange={handleSearchChange}
-                                    className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#355C7D]/20 focus:border-[#355C7D] text-sm dark:bg-neutral-800 dark:border-neutral-700 dark:text-white"
+                                    className="w-full rounded-lg border border-gray-200 py-2 pr-4 pl-9 text-sm focus:border-[#355C7D] focus:ring-2 focus:ring-[#355C7D]/20 focus:outline-none dark:border-neutral-700 dark:bg-neutral-800 dark:text-white"
                                 />
                             </div>
                             <select
                                 value={statusFilter}
                                 onChange={handleStatusFilterChange}
-                                className="rounded-lg border border-gray-200 px-3 py-2 text-sm dark:bg-neutral-800 dark:border-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#355C7D]/20 focus:border-[#355C7D]"
+                                className="rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-[#355C7D] focus:ring-2 focus:ring-[#355C7D]/20 focus:outline-none dark:border-neutral-700 dark:bg-neutral-800 dark:text-white"
                             >
                                 <option value="all">Semua Status</option>
                                 <option value="active">Aktif</option>
@@ -182,7 +233,7 @@ export default function PeriodsIndex({ periods, canManage }: IndexProps) {
                                     setItemsPerPage(Number(e.target.value));
                                     setCurrentPage(1);
                                 }}
-                                className="rounded-lg border border-gray-200 px-2 py-1 text-sm dark:bg-neutral-800 dark:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-[#355C7D]/20"
+                                className="rounded-lg border border-gray-200 px-2 py-1 text-sm focus:ring-2 focus:ring-[#355C7D]/20 focus:outline-none dark:border-neutral-700 dark:bg-neutral-800"
                             >
                                 <option value={5}>5</option>
                                 <option value={10}>10</option>
@@ -194,48 +245,77 @@ export default function PeriodsIndex({ periods, canManage }: IndexProps) {
                     </div>
 
                     {/* Table Card */}
-                    <div className="bg-white dark:bg-neutral-900 rounded-xl border border-gray-100 dark:border-neutral-800 shadow-sm overflow-hidden">
+                    <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
                         <div className="overflow-x-auto">
-                            <table className="w-full text-left text-sm border-collapse">
+                            <table className="w-full border-collapse text-left text-sm">
                                 <thead>
-                                    <tr className="border-b border-gray-100 dark:border-neutral-800 text-xs font-bold text-gray-400 uppercase bg-gray-50/50 dark:bg-neutral-800/10">
-                                        <th className="py-3.5 px-4">Nama Periode</th>
-                                        <th className="py-3.5 px-4">Tanggal Pelaksanaan</th>
-                                        <th className="py-3.5 px-4">Status</th>
-                                        {canManage && <th className="py-3.5 px-4 text-right">Aksi</th>}
+                                    <tr className="border-b border-gray-100 bg-gray-50/50 text-xs font-bold text-gray-400 uppercase dark:border-neutral-800 dark:bg-neutral-800/10">
+                                        <th className="px-4 py-3.5">
+                                            Nama Periode
+                                        </th>
+                                        <th className="px-4 py-3.5">
+                                            Tanggal Pelaksanaan
+                                        </th>
+                                        <th className="px-4 py-3.5">Status</th>
+                                        {canManage && (
+                                            <th className="px-4 py-3.5 text-right">
+                                                Aksi
+                                            </th>
+                                        )}
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {currentItems.length > 0 ? (
                                         currentItems.map((period) => (
-                                            <tr key={period.id} className="border-b border-gray-50 dark:border-neutral-800 hover:bg-gray-50/30 dark:hover:bg-neutral-800/10 transition-all">
-                                                <td className="py-4 px-4 font-bold text-gray-800 dark:text-gray-200">
+                                            <tr
+                                                key={period.id}
+                                                className="border-b border-gray-50 transition-all hover:bg-gray-50/30 dark:border-neutral-800 dark:hover:bg-neutral-800/10"
+                                            >
+                                                <td className="px-4 py-4 font-bold text-gray-800 dark:text-gray-200">
                                                     {period.name}
                                                 </td>
-                                                <td className="py-4 px-4 text-xs text-gray-500">
-                                                    {formatDate(period.start_date)} s/d {formatDate(period.end_date)}
+                                                <td className="px-4 py-4 text-xs text-gray-500">
+                                                    {formatDate(
+                                                        period.start_date,
+                                                    )}{' '}
+                                                    s/d{' '}
+                                                    {formatDate(
+                                                        period.end_date,
+                                                    )}
                                                 </td>
-                                                <td className="py-4 px-4">
-                                                    <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${
-                                                        period.is_active
-                                                            ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-400 border border-emerald-200'
-                                                            : 'bg-gray-100 text-gray-500 border border-gray-200'
-                                                    }`}>
-                                                        {period.is_active ? 'Aktif' : 'Arsip'}
+                                                <td className="px-4 py-4">
+                                                    <span
+                                                        className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold ${
+                                                            period.is_active
+                                                                ? 'border border-emerald-200 bg-emerald-100 text-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-400'
+                                                                : 'border border-gray-200 bg-gray-100 text-gray-500'
+                                                        }`}
+                                                    >
+                                                        {period.is_active
+                                                            ? 'Aktif'
+                                                            : 'Arsip'}
                                                     </span>
                                                 </td>
                                                 {canManage && (
-                                                    <td className="py-4 px-4 text-right space-x-2">
+                                                    <td className="space-x-2 px-4 py-4 text-right">
                                                         <button
-                                                            onClick={() => startEdit(period)}
-                                                            className="inline-flex p-1.5 text-gray-400 hover:text-[#355C7D] rounded hover:bg-gray-100 transition-all cursor-pointer"
+                                                            onClick={() =>
+                                                                startEdit(
+                                                                    period,
+                                                                )
+                                                            }
+                                                            className="inline-flex cursor-pointer rounded p-1.5 text-gray-400 transition-all hover:bg-gray-100 hover:text-[#355C7D]"
                                                             title="Edit"
                                                         >
                                                             <Pencil className="h-4 w-4" />
                                                         </button>
                                                         <button
-                                                            onClick={() => handleDelete(period)}
-                                                            className="inline-flex p-1.5 text-gray-400 hover:text-rose-600 rounded hover:bg-gray-100 transition-all cursor-pointer"
+                                                            onClick={() =>
+                                                                handleDelete(
+                                                                    period,
+                                                                )
+                                                            }
+                                                            className="inline-flex cursor-pointer rounded p-1.5 text-gray-400 transition-all hover:bg-gray-100 hover:text-rose-600"
                                                             title="Hapus"
                                                         >
                                                             <Trash className="h-4 w-4" />
@@ -246,9 +326,15 @@ export default function PeriodsIndex({ periods, canManage }: IndexProps) {
                                         ))
                                     ) : (
                                         <tr>
-                                            <td colSpan={canManage ? 4 : 3} className="text-center py-12 text-gray-400">
-                                                <Calendar className="h-12 w-12 mx-auto stroke-1" />
-                                                <p className="mt-2 text-sm">Tidak ada periode survei yang cocok.</p>
+                                            <td
+                                                colSpan={canManage ? 4 : 3}
+                                                className="py-12 text-center text-gray-400"
+                                            >
+                                                <Calendar className="mx-auto h-12 w-12 stroke-1" />
+                                                <p className="mt-2 text-sm">
+                                                    Tidak ada periode survei
+                                                    yang cocok.
+                                                </p>
                                             </td>
                                         </tr>
                                     )}
@@ -258,35 +344,58 @@ export default function PeriodsIndex({ periods, canManage }: IndexProps) {
 
                         {/* Pagination Controls */}
                         {totalPages > 1 && (
-                            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 p-4 border-t border-gray-100 dark:border-neutral-800 bg-gray-50/50 dark:bg-neutral-800/10 text-sm text-gray-500">
+                            <div className="flex flex-col items-center justify-between gap-4 border-t border-gray-100 bg-gray-50/50 p-4 text-sm text-gray-500 sm:flex-row dark:border-neutral-800 dark:bg-neutral-800/10">
                                 <div>
-                                    Menampilkan <span className="font-semibold text-gray-700 dark:text-gray-300">{indexOfFirstItem + 1}</span> hingga <span className="font-semibold text-gray-700 dark:text-gray-300">{Math.min(indexOfLastItem, totalItems)}</span> dari <span className="font-semibold text-gray-700 dark:text-gray-300">{totalItems}</span> entri
+                                    Menampilkan{' '}
+                                    <span className="font-semibold text-gray-700 dark:text-gray-300">
+                                        {indexOfFirstItem + 1}
+                                    </span>{' '}
+                                    hingga{' '}
+                                    <span className="font-semibold text-gray-700 dark:text-gray-300">
+                                        {Math.min(indexOfLastItem, totalItems)}
+                                    </span>{' '}
+                                    dari{' '}
+                                    <span className="font-semibold text-gray-700 dark:text-gray-300">
+                                        {totalItems}
+                                    </span>{' '}
+                                    entri
                                 </div>
                                 <div className="flex items-center gap-1">
                                     <button
-                                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                        onClick={() =>
+                                            setCurrentPage((prev) =>
+                                                Math.max(prev - 1, 1),
+                                            )
+                                        }
                                         disabled={currentPage === 1}
-                                        className="inline-flex items-center justify-center p-2 rounded-lg border border-gray-200 hover:bg-gray-50 dark:border-neutral-700 dark:hover:bg-neutral-800 disabled:opacity-50 disabled:hover:bg-transparent transition-all cursor-pointer disabled:cursor-not-allowed"
+                                        className="inline-flex cursor-pointer items-center justify-center rounded-lg border border-gray-200 p-2 transition-all hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent dark:border-neutral-700 dark:hover:bg-neutral-800"
                                     >
                                         <ChevronLeft className="h-4 w-4" />
                                     </button>
-                                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                                    {Array.from(
+                                        { length: totalPages },
+                                        (_, i) => i + 1,
+                                    ).map((page) => (
                                         <button
                                             key={page}
                                             onClick={() => setCurrentPage(page)}
-                                            className={`inline-flex items-center justify-center w-8 h-8 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
+                                            className={`inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-sm font-semibold transition-all ${
                                                 currentPage === page
                                                     ? 'bg-[#355C7D] text-white shadow-sm'
-                                                    : 'border border-gray-200 hover:bg-gray-50 dark:border-neutral-700 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300'
+                                                    : 'border border-gray-200 text-gray-700 hover:bg-gray-50 dark:border-neutral-700 dark:text-gray-300 dark:hover:bg-neutral-800'
                                             }`}
                                         >
                                             {page}
                                         </button>
                                     ))}
                                     <button
-                                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                        onClick={() =>
+                                            setCurrentPage((prev) =>
+                                                Math.min(prev + 1, totalPages),
+                                            )
+                                        }
                                         disabled={currentPage === totalPages}
-                                        className="inline-flex items-center justify-center p-2 rounded-lg border border-gray-200 hover:bg-gray-50 dark:border-neutral-700 dark:hover:bg-neutral-800 disabled:opacity-50 disabled:hover:bg-transparent transition-all cursor-pointer disabled:cursor-not-allowed"
+                                        className="inline-flex cursor-pointer items-center justify-center rounded-lg border border-gray-200 p-2 transition-all hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent dark:border-neutral-700 dark:hover:bg-neutral-800"
                                     >
                                         <ChevronRight className="h-4 w-4" />
                                     </button>
@@ -300,48 +409,69 @@ export default function PeriodsIndex({ periods, canManage }: IndexProps) {
             {/* MODAL: CREATE FORM */}
             {isCreateOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-                    <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-2xl border border-gray-100 dark:border-neutral-800 w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-                        <div className="flex items-center justify-between border-b border-gray-100 dark:border-neutral-800 p-5 bg-gray-50/50 dark:bg-neutral-800/10">
-                            <h3 className="font-bold text-gray-900 dark:text-white flex items-center gap-1.5">
+                    <div className="w-full max-w-lg animate-in overflow-hidden rounded-xl border border-gray-100 bg-white shadow-2xl duration-150 zoom-in-95 fade-in dark:border-neutral-800 dark:bg-neutral-900">
+                        <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50/50 p-5 dark:border-neutral-800 dark:bg-neutral-800/10">
+                            <h3 className="flex items-center gap-1.5 font-bold text-gray-900 dark:text-white">
                                 <Plus className="h-5 w-5 text-[#355C7D]" />
                                 Tambah Periode Survei
                             </h3>
-                            <button onClick={() => setIsCreateOpen(false)} className="text-gray-400 hover:text-gray-500">
+                            <button
+                                onClick={() => setIsCreateOpen(false)}
+                                className="text-gray-400 hover:text-gray-500"
+                            >
                                 <X className="h-5 w-5" />
                             </button>
                         </div>
-                        <form onSubmit={handleCreateSubmit} className="p-6 space-y-4">
+                        <form
+                            onSubmit={handleCreateSubmit}
+                            className="space-y-4 p-6"
+                        >
                             <div className="space-y-1.5">
-                                <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">Nama Periode</label>
+                                <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                    Nama Periode
+                                </label>
                                 <input
                                     type="text"
                                     required
                                     value={data.name}
-                                    onChange={e => setData('name', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('name', e.target.value)
+                                    }
                                     placeholder="Triwulan III - 2026"
-                                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#355C7D]/20 focus:border-[#355C7D] text-sm"
+                                    className="w-full rounded-lg border border-gray-200 px-4 py-2 text-sm focus:border-[#355C7D] focus:ring-2 focus:ring-[#355C7D]/20 focus:outline-none"
                                 />
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1.5">
-                                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">Tanggal Mulai</label>
+                                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                        Tanggal Mulai
+                                    </label>
                                     <input
                                         type="date"
                                         required
                                         value={data.start_date}
-                                        onChange={e => setData('start_date', e.target.value)}
-                                        className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#355C7D]/20 focus:border-[#355C7D] text-sm bg-white"
+                                        onChange={(e) =>
+                                            setData(
+                                                'start_date',
+                                                e.target.value,
+                                            )
+                                        }
+                                        className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm focus:border-[#355C7D] focus:ring-2 focus:ring-[#355C7D]/20 focus:outline-none"
                                     />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">Tanggal Selesai</label>
+                                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                        Tanggal Selesai
+                                    </label>
                                     <input
                                         type="date"
                                         required
                                         value={data.end_date}
-                                        onChange={e => setData('end_date', e.target.value)}
-                                        className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#355C7D]/20 focus:border-[#355C7D] text-sm bg-white"
+                                        onChange={(e) =>
+                                            setData('end_date', e.target.value)
+                                        }
+                                        className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm focus:border-[#355C7D] focus:ring-2 focus:ring-[#355C7D]/20 focus:outline-none"
                                     />
                                 </div>
                             </div>
@@ -351,26 +481,31 @@ export default function PeriodsIndex({ periods, canManage }: IndexProps) {
                                     type="checkbox"
                                     id="is_active_create"
                                     checked={data.is_active}
-                                    onChange={e => setData('is_active', e.target.checked)}
-                                    className="h-4 w-4 text-[#355C7D] focus:ring-[#355C7D]/20 rounded border-gray-300"
+                                    onChange={(e) =>
+                                        setData('is_active', e.target.checked)
+                                    }
+                                    className="h-4 w-4 rounded border-gray-300 text-[#355C7D] focus:ring-[#355C7D]/20"
                                 />
-                                <label htmlFor="is_active_create" className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                <label
+                                    htmlFor="is_active_create"
+                                    className="text-xs font-semibold text-gray-700 dark:text-gray-300"
+                                >
                                     Jadikan sebagai Periode Aktif
                                 </label>
                             </div>
 
-                            <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 dark:border-neutral-800">
+                            <div className="flex justify-end gap-3 border-t border-gray-100 pt-4 dark:border-neutral-800">
                                 <button
                                     type="button"
                                     onClick={() => setIsCreateOpen(false)}
-                                    className="px-4 py-2 text-sm font-semibold border border-gray-200 hover:bg-gray-50 rounded-lg text-gray-700"
+                                    className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
                                 >
                                     Batal
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={processing}
-                                    className="px-5 py-2 text-sm font-semibold text-white bg-[#355C7D] hover:bg-[#284964] rounded-lg shadow-sm disabled:opacity-50"
+                                    className="rounded-lg bg-[#355C7D] px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#284964] disabled:opacity-50"
                                 >
                                     {processing ? 'Menyimpan...' : 'Simpan'}
                                 </button>
@@ -383,48 +518,69 @@ export default function PeriodsIndex({ periods, canManage }: IndexProps) {
             {/* MODAL: EDIT FORM */}
             {editingPeriod && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-                    <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-2xl border border-gray-100 dark:border-neutral-800 w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-                        <div className="flex items-center justify-between border-b border-gray-100 dark:border-neutral-800 p-5 bg-gray-50/50 dark:bg-neutral-800/10">
-                            <h3 className="font-bold text-gray-900 dark:text-white flex items-center gap-1.5">
+                    <div className="w-full max-w-lg animate-in overflow-hidden rounded-xl border border-gray-100 bg-white shadow-2xl duration-150 zoom-in-95 fade-in dark:border-neutral-800 dark:bg-neutral-900">
+                        <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50/50 p-5 dark:border-neutral-800 dark:bg-neutral-800/10">
+                            <h3 className="flex items-center gap-1.5 font-bold text-gray-900 dark:text-white">
                                 <Pencil className="h-5 w-5 text-[#355C7D]" />
                                 Edit Periode: {editingPeriod.name}
                             </h3>
-                            <button onClick={() => setEditingPeriod(null)} className="text-gray-400 hover:text-gray-500">
+                            <button
+                                onClick={() => setEditingPeriod(null)}
+                                className="text-gray-400 hover:text-gray-500"
+                            >
                                 <X className="h-5 w-5" />
                             </button>
                         </div>
-                        <form onSubmit={handleEditSubmit} className="p-6 space-y-4">
+                        <form
+                            onSubmit={handleEditSubmit}
+                            className="space-y-4 p-6"
+                        >
                             <div className="space-y-1.5">
-                                <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">Nama Periode</label>
+                                <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                    Nama Periode
+                                </label>
                                 <input
                                     type="text"
                                     required
                                     value={data.name}
-                                    onChange={e => setData('name', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('name', e.target.value)
+                                    }
                                     placeholder="Triwulan III - 2026"
-                                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#355C7D]/20 focus:border-[#355C7D] text-sm"
+                                    className="w-full rounded-lg border border-gray-200 px-4 py-2 text-sm focus:border-[#355C7D] focus:ring-2 focus:ring-[#355C7D]/20 focus:outline-none"
                                 />
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1.5">
-                                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">Tanggal Mulai</label>
+                                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                        Tanggal Mulai
+                                    </label>
                                     <input
                                         type="date"
                                         required
                                         value={data.start_date}
-                                        onChange={e => setData('start_date', e.target.value)}
-                                        className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#355C7D]/20 focus:border-[#355C7D] text-sm bg-white"
+                                        onChange={(e) =>
+                                            setData(
+                                                'start_date',
+                                                e.target.value,
+                                            )
+                                        }
+                                        className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm focus:border-[#355C7D] focus:ring-2 focus:ring-[#355C7D]/20 focus:outline-none"
                                     />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">Tanggal Selesai</label>
+                                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                        Tanggal Selesai
+                                    </label>
                                     <input
                                         type="date"
                                         required
                                         value={data.end_date}
-                                        onChange={e => setData('end_date', e.target.value)}
-                                        className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#355C7D]/20 focus:border-[#355C7D] text-sm bg-white"
+                                        onChange={(e) =>
+                                            setData('end_date', e.target.value)
+                                        }
+                                        className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm focus:border-[#355C7D] focus:ring-2 focus:ring-[#355C7D]/20 focus:outline-none"
                                     />
                                 </div>
                             </div>
@@ -434,28 +590,35 @@ export default function PeriodsIndex({ periods, canManage }: IndexProps) {
                                     type="checkbox"
                                     id="is_active_edit"
                                     checked={data.is_active}
-                                    onChange={e => setData('is_active', e.target.checked)}
-                                    className="h-4 w-4 text-[#355C7D] focus:ring-[#355C7D]/20 rounded border-gray-300"
+                                    onChange={(e) =>
+                                        setData('is_active', e.target.checked)
+                                    }
+                                    className="h-4 w-4 rounded border-gray-300 text-[#355C7D] focus:ring-[#355C7D]/20"
                                 />
-                                <label htmlFor="is_active_edit" className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                <label
+                                    htmlFor="is_active_edit"
+                                    className="text-xs font-semibold text-gray-700 dark:text-gray-300"
+                                >
                                     Jadikan sebagai Periode Aktif
                                 </label>
                             </div>
 
-                            <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 dark:border-neutral-800">
+                            <div className="flex justify-end gap-3 border-t border-gray-100 pt-4 dark:border-neutral-800">
                                 <button
                                     type="button"
                                     onClick={() => setEditingPeriod(null)}
-                                    className="px-4 py-2 text-sm font-semibold border border-gray-200 hover:bg-gray-50 rounded-lg text-gray-700"
+                                    className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
                                 >
                                     Batal
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={processing}
-                                    className="px-5 py-2 text-sm font-semibold text-white bg-[#355C7D] hover:bg-[#284964] rounded-lg shadow-sm disabled:opacity-50"
+                                    className="rounded-lg bg-[#355C7D] px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#284964] disabled:opacity-50"
                                 >
-                                    {processing ? 'Menyimpan...' : 'Simpan Perubahan'}
+                                    {processing
+                                        ? 'Menyimpan...'
+                                        : 'Simpan Perubahan'}
                                 </button>
                             </div>
                         </form>

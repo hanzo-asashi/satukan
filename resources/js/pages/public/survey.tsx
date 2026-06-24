@@ -67,6 +67,7 @@ export default function SurveyPage({ survey }: SurveyProps) {
     // Initial form state
     const { data, setData, post, processing, errors } = useForm({
         survey_id: survey.id,
+        website: '',
         respondent: {
             nik: '',
             name: '',
@@ -188,6 +189,7 @@ export default function SurveyPage({ survey }: SurveyProps) {
 
             const payload = {
                 survey_id: survey.id,
+                website: '',
                 answers: updatedAnswers,
                 respondent: {
                     nik: '',
@@ -599,6 +601,20 @@ export default function SurveyPage({ survey }: SurveyProps) {
 
                 <div className="flex-grow p-6 sm:p-10">
                     <form onSubmit={handleSubmit} className="space-y-6">
+                        {/* Honeypot field for bot prevention */}
+                        <div className="hidden" aria-hidden="true">
+                            <input
+                                type="text"
+                                name="website"
+                                value={data.website}
+                                onChange={(e) =>
+                                    setData('website', e.target.value)
+                                }
+                                autoComplete="off"
+                                tabIndex={-1}
+                            />
+                        </div>
+
                         {/* STEP 1: RESPONDENT PROFILE */}
                         {step === 1 && (
                             <div className="space-y-6">

@@ -66,6 +66,7 @@ class PublicSurveyController extends Controller
     {
         $request->validate([
             'survey_id' => ['required', 'exists:surveys,id'],
+            'website' => ['nullable', 'string'],
             'answers' => ['required', 'array'],
             'answers.*.question_id' => ['required', 'exists:survey_questions,id'],
             'answers.*.score' => ['required', 'integer', 'min:1', 'max:4'],
@@ -85,6 +86,11 @@ class PublicSurveyController extends Controller
         ]);
 
         $survey = Survey::where('id', $request->input('survey_id'))->firstOrFail();
+
+        // 0. Honeypot check (anti-spam)
+        if ($request->filled('website')) {
+            return to_route('survey.complete', ['token' => $survey->token]);
+        }
 
         // 1. Duplicate Prevention check (same IP and Survey ID within last 5 minutes)
         $ipAddress = $request->ip();

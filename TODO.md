@@ -16,3 +16,19 @@ Dokumen ini berisi peta jalan pengembangan fitur tambahan untuk menyempurnakan a
 - [x] **6. Executive Dashboard untuk Bupati / Sekretaris Daerah** <!-- id: 6 -->
   - Ringkasan eksekutif makro untuk pimpinan daerah, mencakup peringkat OPD terbaik/terburuk, tren daerah, dan rasio penyelesaian RTL.
 
+## Pengembangan Lanjutan (Gap & Keamanan)
+
+- [ ] **7. Honeypot & Anti-Spam (Keamanan Portal Publik)** <!-- id: 7 -->
+  - Implementasi field honeypot tersembunyi pada pengisian survei publik untuk membedakan bot dengan manusia secara otomatis tanpa mengganggu pengguna nyata.
+- [ ] **8. Otomatisasi Sinkronisasi Nasional (Laravel Scheduler & Queue)** <!-- id: 8 -->
+  - Penjadwalan otomatis sinkronisasi ke `skm.go.id` menggunakan Laravel Scheduler serta antrean (Queue Job) dengan mekanisme retry otomatis jika server pusat downtime.
+- [ ] **9. PWA & Offline Mode untuk Kiosk Tablet** <!-- id: 9 -->
+  - Dukungan Progressive Web App (PWA) dan local storage (IndexedDB) agar tablet kiosk di loket tetap berfungsi optimal saat offline dan otomatis sinkron saat online.
+- [ ] **10. Lokalisasi Bahasa Bugis & Audio Inklusif** <!-- id: 10 -->
+  - Menyediakan opsi terjemahan kuesioner ke Bahasa Bugis Soppeng dan opsi audio read-aloud untuk penyandang disabilitas atau lansia.
+- [ ] **11. Klasifikasi Pengaduan & Sentimen Berbasis AI** <!-- id: 11 -->
+  - Analisis otomatis isi kotak saran/aduan publik ke dalam kategori sentimen (Positif, Netral, Negatif) dan prioritas penanganan.
+- [ ] **12. Portal Pelacakan Aduan Dua Arah (WhatsApp Bot)** <!-- id: 12 -->
+  - Interaksi WA Gateway interaktif agar masyarakat bisa mengirim pengaduan langsung dan melacak status tindak lanjut (Rencana Aksi) OPD via chat WhatsApp.
+
+

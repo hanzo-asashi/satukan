@@ -387,7 +387,7 @@ INSERT INTO `role_user` (`user_id`, `role_id`) VALUES (1, 1);
 -- Default Settings Seed
 INSERT INTO `settings` (`key`, `value`, `created_at`, `updated_at`) VALUES
 ('national_sync_enabled', '1', NOW(), NOW()),
-('national_api_endpoint', 'https://skm.panrb.go.id/api/v1/sync', NOW(), NOW()),
+('national_api_endpoint', 'https://skm.menpan.go.id/api/v1/sync', NOW(), NOW()),
 ('national_api_token', 'token_dummy_national_skm_12345', NOW(), NOW()),
 ('regional_name', 'Pemerintah Kabupaten Satukan', NOW(), NOW()),
 ('regional_code', '7300', NOW(), NOW());

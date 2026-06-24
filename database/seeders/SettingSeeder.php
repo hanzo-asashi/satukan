@@ -11,10 +11,10 @@ class SettingSeeder extends Seeder
     {
         $settings = [
             'national_sync_enabled' => '1',
-            'national_api_endpoint' => 'https://skm.panrb.go.id/api/v1/sync',
+            'national_api_endpoint' => 'https://skm.menpan.go.id/api/v1/sync',
             'national_api_token' => 'token_dummy_national_skm_12345',
-            'regional_name' => 'Pemerintah Kabupaten Satukan',
-            'regional_code' => '7300',
+            'regional_name' => 'Pemerintah Kabupaten Soppeng',
+            'regional_code' => '7312',
         ];
 
         foreach ($settings as $key => $value) {

@@ -10,7 +10,10 @@ use App\Models\SurveyPeriod;
 use App\Models\SurveyResponse;
 use App\Models\Unit;
 use App\Utils\IkmCalculator;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Response as FacadeResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -19,7 +22,7 @@ class ReportExportController extends Controller
     /**
      * Generate PDF-ready print layout for SKM Report (compliant with Permen PANRB No. 14 Tahun 2017).
      */
-    public function pdf(Request $request)
+    public function pdf(Request $request): RedirectResponse|View
     {
         $user = $request->user();
         $isSuperAdmin = $user->hasRole('superadmin');
@@ -31,7 +34,7 @@ class ReportExportController extends Controller
         // 1. Get survey period
         $period = null;
         if ($periodId) {
-            $period = SurveyPeriod::find($periodId);
+            $period = SurveyPeriod::where('id', $periodId)->first();
         }
         if (! $period) {
             $period = SurveyPeriod::where('is_active', true)->first() ?: SurveyPeriod::orderBy('end_date', 'desc')->first();
@@ -50,8 +53,9 @@ class ReportExportController extends Controller
         $scopeName = 'Kabupaten Soppeng';
         $subScopeName = 'Seluruh Organisasi Perangkat Daerah';
 
+        $opd = null;
         if ($opdId) {
-            $opd = Opd::find($opdId);
+            $opd = Opd::where('id', $opdId)->first();
             if ($opd) {
                 $scopeName = $opd->name;
                 $subScopeName = 'Organisasi Perangkat Daerah regional';
@@ -62,7 +66,7 @@ class ReportExportController extends Controller
         }
 
         if ($unitId) {
-            $unit = Unit::with('opd')->find($unitId);
+            $unit = Unit::with('opd')->where('id', $unitId)->first();
             if ($unit) {
                 $scopeName = $unit->name;
                 $subScopeName = $unit->opd->name;
@@ -107,7 +111,7 @@ class ReportExportController extends Controller
         ];
 
         // Fetch active recommendations
-        $recommendationsQuery = Recommendation::with(['unit', 'follow_ups'])
+        $recommendationsQuery = Recommendation::with(['unit', 'followUps'])
             ->where('period_id', $period->id);
 
         if ($opdId) {
@@ -131,7 +135,7 @@ class ReportExportController extends Controller
             'recommendations' => $recommendations,
             'isOpdReport' => (bool) $opdId,
             'officerName' => $user->name,
-            'opdName' => $isSuperAdmin && ! $opdId ? 'Sekretariat Daerah Soppeng' : ($opdId ? Opd::find($opdId)->name : 'Sekretariat Daerah Soppeng'),
+            'opdName' => $isSuperAdmin && ! $opdId ? 'Sekretariat Daerah Soppeng' : ($opd ? $opd->name : 'Sekretariat Daerah Soppeng'),
         ]);
     }
 
@@ -150,7 +154,7 @@ class ReportExportController extends Controller
         // Get active period
         $period = null;
         if ($periodId) {
-            $period = SurveyPeriod::find($periodId);
+            $period = SurveyPeriod::where('id', $periodId)->first();
         }
         if (! $period) {
             $period = SurveyPeriod::where('is_active', true)->first() ?: SurveyPeriod::orderBy('end_date', 'desc')->first();
@@ -191,6 +195,9 @@ class ReportExportController extends Controller
 
         $callback = function () use ($responses, $period) {
             $file = fopen('php://output', 'w');
+            if ($file === false) {
+                throw new \RuntimeException('Failed to open php://output');
+            }
 
             // Write UTF-8 BOM so Excel opens it correctly
             fwrite($file, "\xEF\xBB\xBF");
@@ -235,7 +242,7 @@ class ReportExportController extends Controller
 
                 $row = [
                     $num++,
-                    $resp->completed_at ? $resp->completed_at->format('Y-m-d H:i:s') : '',
+                    $resp->completed_at ? Carbon::parse($resp->completed_at)->format('Y-m-d H:i:s') : '',
                     $resp->survey->unit->name,
                     $resp->survey->unit->opd->name,
                     $resp->respondentProfile->name,

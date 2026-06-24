@@ -7,6 +7,7 @@ use App\Models\AuditLog;
 use App\Models\Opd;
 use App\Models\Survey;
 use App\Models\Unit;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -134,7 +135,7 @@ class UnitController extends Controller
         }
     }
 
-    private function checkScope($user, Unit $unit): void
+    private function checkScope(User $user, Unit $unit): void
     {
         if (! $user->hasRole('superadmin') && $unit->opd_id !== $user->opd_id) {
             abort(403, 'Anda tidak memiliki wewenang untuk mengakses unit layanan ini.');

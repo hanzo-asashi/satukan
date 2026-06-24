@@ -8,6 +8,7 @@ use App\Models\Survey;
 use App\Models\SurveyPeriod;
 use App\Models\SurveyQuestion;
 use App\Models\Unit;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -63,7 +64,7 @@ class SurveyManagementController extends Controller
 
         if (! $isSuperAdmin) {
             // Enforce unit safety
-            $unit = Unit::findOrFail($validated['unit_id']);
+            $unit = Unit::where('id', $validated['unit_id'])->firstOrFail();
             if ($unit->opd_id !== $user->opd_id) {
                 abort(403, 'Anda tidak diizinkan membuat survei untuk unit layanan ini.');
             }
@@ -122,10 +123,10 @@ class SurveyManagementController extends Controller
         }
     }
 
-    private function checkScope($user, Survey $survey): void
+    private function checkScope(User $user, Survey $survey): void
     {
         if (! $user->hasRole('superadmin')) {
-            $unit = Unit::findOrFail($survey->unit_id);
+            $unit = Unit::where('id', $survey->unit_id)->firstOrFail();
             if ($unit->opd_id !== $user->opd_id) {
                 abort(403, 'Anda tidak memiliki wewenang untuk mengakses data survei unit ini.');
             }

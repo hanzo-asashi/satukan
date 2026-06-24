@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,8 +11,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 #[Fillable(['survey_id', 'respondent_profile_id', 'ip_address', 'user_agent', 'completed_at'])]
 class SurveyResponse extends Model
 {
-    use HasFactory;
-
     /**
      * @return array<string, string>
      */

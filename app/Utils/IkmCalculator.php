@@ -2,20 +2,20 @@
 
 namespace App\Utils;
 
-use App\Models\SurveyResponseDetail;
+use App\Models\SurveyResponse;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class IkmCalculator
 {
     /**
-     * Calculate IKM score, grade, and indicator breakdown for a given query (e.g. by unit, OPD, period).
-     *
+     * @param  Builder<SurveyResponse>|null  $responseQuery
      * @return array{
      *     score: float,
      *     grade: string,
      *     grade_label: string,
      *     total_respondents: int,
-     *     indicators: array<string, array{code: string, name: string, nrr: float, raw_avg: float}>,
+     *     indicators: array<string, array{code: string, name: string, nrr: float, nrr_weighted: float}>,
      *     lowest_indicator: array{code: string, name: string, score: float}|null,
      *     highest_indicator: array{code: string, name: string, score: float}|null
      * }
@@ -36,7 +36,8 @@ class IkmCalculator
 
         // Fetch details grouped by question indicators
         // We need average score per question/indicator
-        $details = SurveyResponseDetail::whereIn('response_id', $responseIds)
+        $details = DB::table('survey_response_details')
+            ->whereIn('response_id', $responseIds)
             ->join('survey_questions', 'survey_response_details.question_id', '=', 'survey_questions.id')
             ->selectRaw('survey_questions.indicator_code, survey_questions.indicator_name, AVG(survey_response_details.score) as avg_score')
             ->groupBy('survey_questions.indicator_code', 'survey_questions.indicator_name')
@@ -127,6 +128,16 @@ class IkmCalculator
 
     /**
      * Return default empty result payload.
+     *
+     * @return array{
+     *     score: float,
+     *     grade: string,
+     *     grade_label: string,
+     *     total_respondents: int,
+     *     indicators: array<string, array{code: string, name: string, nrr: float, nrr_weighted: float}>,
+     *     lowest_indicator: array{code: string, name: string, score: float}|null,
+     *     highest_indicator: array{code: string, name: string, score: float}|null
+     * }
      */
     private static function emptyResult(): array
     {

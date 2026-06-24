@@ -84,7 +84,7 @@ class PublicSurveyController extends Controller
             'complaint.content' => ['nullable', 'string', 'max:1000'],
         ]);
 
-        $survey = Survey::findOrFail($request->input('survey_id'));
+        $survey = Survey::where('id', $request->input('survey_id'))->firstOrFail();
 
         // 1. Duplicate Prevention check (same IP and Survey ID within last 5 minutes)
         $ipAddress = $request->ip();

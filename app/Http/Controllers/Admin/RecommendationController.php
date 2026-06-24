@@ -8,6 +8,7 @@ use App\Models\FollowUp;
 use App\Models\Recommendation;
 use App\Models\SurveyPeriod;
 use App\Models\Unit;
+use App\Models\User;
 use App\Services\AiRecommendationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -64,7 +65,7 @@ class RecommendationController extends Controller
         ]);
 
         if (! $isSuperAdmin) {
-            $unit = Unit::findOrFail($validated['unit_id']);
+            $unit = Unit::where('id', $validated['unit_id'])->firstOrFail();
             if ($unit->opd_id !== $user->opd_id) {
                 abort(403, 'Anda tidak diizinkan menambahkan rekomendasi untuk unit ini.');
             }
@@ -106,7 +107,7 @@ class RecommendationController extends Controller
             'deadline' => ['nullable', 'date'],
         ]);
 
-        $rec = Recommendation::findOrFail($validated['recommendation_id']);
+        $rec = Recommendation::where('id', $validated['recommendation_id'])->firstOrFail();
         $this->checkScope($request->user(), $rec);
 
         $followUp = FollowUp::create([
@@ -163,7 +164,7 @@ class RecommendationController extends Controller
         $isSuperAdmin = $user->hasRole('superadmin');
 
         if (! $isSuperAdmin) {
-            $unit = Unit::findOrFail($validated['unit_id']);
+            $unit = Unit::where('id', $validated['unit_id'])->firstOrFail();
             if ($unit->opd_id !== $user->opd_id) {
                 abort(403, 'Anda tidak diizinkan mengakses rekomendasi untuk unit ini.');
             }
@@ -184,10 +185,10 @@ class RecommendationController extends Controller
         }
     }
 
-    private function checkScope($user, Recommendation $rec): void
+    private function checkScope(User $user, Recommendation $rec): void
     {
         if (! $user->hasRole('superadmin')) {
-            $unit = Unit::findOrFail($rec->unit_id);
+            $unit = Unit::where('id', $rec->unit_id)->firstOrFail();
             if ($unit->opd_id !== $user->opd_id) {
                 abort(403, 'Anda tidak memiliki wewenang untuk unit ini.');
             }

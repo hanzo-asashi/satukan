@@ -3,15 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable(['period_id', 'opd_id', 'unit_id', 'total_respondents', 'score', 'grade', 'calculated_at'])]
 class IkmResult extends Model
 {
-    use HasFactory;
-
     /**
      * @return array<string, string>
      */

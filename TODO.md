@@ -18,9 +18,9 @@ Dokumen ini berisi peta jalan pengembangan fitur tambahan untuk menyempurnakan a
 
 ## Pengembangan Lanjutan (Gap & Keamanan)
 
-- [ ] **7. Honeypot & Anti-Spam (Keamanan Portal Publik)** <!-- id: 7 -->
+- [x] **7. Honeypot & Anti-Spam (Keamanan Portal Publik)** <!-- id: 7 -->
   - Implementasi field honeypot tersembunyi pada pengisian survei publik untuk membedakan bot dengan manusia secara otomatis tanpa mengganggu pengguna nyata.
-- [ ] **8. Otomatisasi Sinkronisasi Nasional (Laravel Scheduler & Queue)** <!-- id: 8 -->
+- [x] **8. Otomatisasi Sinkronisasi Nasional (Laravel Scheduler & Queue)** <!-- id: 8 -->
   - Penjadwalan otomatis sinkronisasi ke `skm.go.id` menggunakan Laravel Scheduler serta antrean (Queue Job) dengan mekanisme retry otomatis jika server pusat downtime.
 - [ ] **9. PWA & Offline Mode untuk Kiosk Tablet** <!-- id: 9 -->
   - Dukungan Progressive Web App (PWA) dan local storage (IndexedDB) agar tablet kiosk di loket tetap berfungsi optimal saat offline dan otomatis sinkron saat online.

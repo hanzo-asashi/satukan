@@ -1,5 +1,8 @@
 # SATUKAN - Sistem Terpadu Ukur Kepuasan Masyarakat Nasional
 
+[![tests](https://github.com/hanzo-asashi/satukan/actions/workflows/tests.yml/badge.svg)](https://github.com/hanzo-asashi/satukan/actions/workflows/tests.yml)
+[![linter](https://github.com/hanzo-asashi/satukan/actions/workflows/lint.yml/badge.svg)](https://github.com/hanzo-asashi/satukan/actions/workflows/lint.yml)
+
 SATUKAN adalah aplikasi web tingkat produksi untuk mengukur Indeks Kepuasan Masyarakat (IKM) pada loket pelayanan publik regional. Sistem ini dibangun dengan kepatuhan penuh terhadap **Permen PANRB No. 14 Tahun 2017** tentang Pedoman Penyusunan Survei Kepuasan Masyarakat Unit Penyelenggara Pelayanan Publik.
 
 Aplikasi ini mengusung arsitektur modern berbasis **Laravel 13**, **React 19**, **Inertia.js v3**, dan **Tailwind CSS v4**.

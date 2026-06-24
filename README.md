@@ -2,6 +2,7 @@
 
 [![tests](https://github.com/hanzo-asashi/satukan/actions/workflows/tests.yml/badge.svg)](https://github.com/hanzo-asashi/satukan/actions/workflows/tests.yml)
 [![linter](https://github.com/hanzo-asashi/satukan/actions/workflows/lint.yml/badge.svg)](https://github.com/hanzo-asashi/satukan/actions/workflows/lint.yml)
+[![license](https://img.shields.io/github/license/hanzo-asashi/satukan)](LICENSE)
 
 SATUKAN adalah aplikasi web tingkat produksi untuk mengukur Indeks Kepuasan Masyarakat (IKM) pada loket pelayanan publik regional. Sistem ini dibangun dengan kepatuhan penuh terhadap **Permen PANRB No. 14 Tahun 2017** tentang Pedoman Penyusunan Survei Kepuasan Masyarakat Unit Penyelenggara Pelayanan Publik.
 
@@ -59,3 +60,9 @@ Untuk mempermudah pemahaman arsitektur dan operasional sistem, silakan merujuk k
 * **Frontend**: React 19, InertiaJS v3, TailwindCSS v4, Lucide Icons, Sonner Toaster
 * **Keamanan**: Authentication Fortify + Passkey (WebAuthn), RBAC, IP Rate Limiter, CSRF & XSS protection
 * **Testing Suite**: Pest PHP v4 (45 Feature & Unit Tests)
+
+---
+
+## 📄 Lisensi
+
+Proyek ini dilisensikan di bawah [Lisensi MIT](LICENSE) - lihat file [LICENSE](LICENSE) untuk detail lebih lanjut.

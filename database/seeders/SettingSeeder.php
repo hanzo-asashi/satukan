@@ -11,7 +11,7 @@ class SettingSeeder extends Seeder
     {
         $settings = [
             'national_sync_enabled' => '1',
-            'national_api_endpoint' => 'https://skm.menpan.go.id/api/v1/sync',
+            'national_api_endpoint' => 'https://skm.go.id/api/v1/sync',
             'national_api_token' => 'token_dummy_national_skm_12345',
             'regional_name' => 'Pemerintah Kabupaten Soppeng',
             'regional_code' => '7312',

@@ -216,7 +216,7 @@ export default function SyncIndex({ settings, syncLogs }: IndexProps) {
                                             e.target.value,
                                         )
                                     }
-                                    placeholder="https://skm.menpan.go.id/api/v1/sync"
+                                    placeholder="https://skm.go.id/api/v1/sync"
                                     className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs focus:border-[#355C7D] focus:ring-2 focus:ring-[#355C7D]/20 focus:outline-none disabled:opacity-50"
                                 />
                             </div>

@@ -1,2 +1,10 @@
 resources/js/components/ui/*
 resources/views/mail/*
+/.agents/
+/.claude/
+/.junie/
+/opencode.json
+/CLAUDE.md
+/boost.json
+/AGENTS.md
+/.mcp.json

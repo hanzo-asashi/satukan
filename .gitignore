@@ -27,3 +27,11 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+!/.junie/
+!/.agents/
+!/.claude/
+!/opencode.json
+!/CLAUDE.md
+!/boost.json
+!/AGENTS.md
+!/.mcp.json

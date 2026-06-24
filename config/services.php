@@ -35,4 +35,14 @@ return [
         ],
     ],
 
+    'fonnte' => [
+        'token' => env('FONNTE_API_TOKEN'),
+        'url' => env('FONNTE_API_URL', 'https://api.fonnte.com/send'),
+    ],
+
+    'openai' => [
+        'key' => env('OPENAI_API_KEY'),
+        'model' => env('OPENAI_MODEL', 'gpt-4o-mini'),
+    ],
+
 ];

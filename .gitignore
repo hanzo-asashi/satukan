@@ -35,3 +35,6 @@ yarn-error.log
 !/boost.json
 !/AGENTS.md
 !/.mcp.json
+nativephp
+public/android-hot
+public/ios-hot
